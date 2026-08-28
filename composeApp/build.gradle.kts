@@ -15,7 +15,7 @@ plugins {
     alias(libs.plugins.gradle.build.config)
 }
 
-version = "1.0.1"
+version = "1.0.2"
 
 kotlin {
     androidTarget {
@@ -156,7 +156,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "MangaCats"
-            packageVersion = "1.0.0"
+            packageVersion = project.version.toString()
             javaHome = System.getProperty("java.home")
             modules("java.net.http")
             macOS {
