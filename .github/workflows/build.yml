@@ -83,3 +83,42 @@ jobs:
         with:
           name: desktop-linux-deb
           path: composeApp/build/compose/binaries/main/deb/*.deb
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs:
+      - build-android
+      - build-desktop-macos
+      - build-desktop-windows
+      - build-desktop-linux
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(grep -m1 '^version = ' composeApp/build.gradle.kts | sed -E 's/version = "(.*)"/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          files: |
+            artifacts/android-apk/*.apk
+            artifacts/desktop-macos-dmg/*.dmg
+            artifacts/desktop-windows-msi/*.msi
+            artifacts/desktop-linux-deb/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
