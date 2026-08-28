@@ -18,30 +18,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import io.github.katarem.ui.Routes
 import io.github.katarem.ui.component.MangaGrid
-import io.github.katarem.ui.viewmodel.DownloadViewModel
 import io.github.katarem.ui.viewmodel.LibraryViewModel
-import io.github.katarem.ui.viewmodel.RecentViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LibraryScreen(
     navigator: NavHostController,
-    recentViewModel: RecentViewModel = koinViewModel<RecentViewModel>(),
-    offlineViewmodel: DownloadViewModel = koinViewModel<DownloadViewModel>(),
     libraryViewModel: LibraryViewModel = koinViewModel<LibraryViewModel>()
 ) {
 
     LaunchedEffect(Unit) {
-        recentViewModel.loadMangas().join()
-        offlineViewmodel.getOfflineMangas().join()
+        libraryViewModel.loadMangas()
     }
 
-    val recentMangas = recentViewModel.mangas.collectAsState()
-    val offlineMangas = offlineViewmodel.mangas.collectAsState()
-    val filterOfflineOnly = libraryViewModel.filter.collectAsState()
-
-    val mangas = if (filterOfflineOnly.value) offlineMangas.value.keys.toList()
-    else HashSet(recentMangas.value + offlineMangas.value.keys).toList()
+    val state = libraryViewModel.state.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(5.dp)
@@ -51,10 +41,10 @@ fun LibraryScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Show offline only")
-            Checkbox(checked = filterOfflineOnly.value,
-                onCheckedChange = { libraryViewModel.toggleOfflineFilter(!filterOfflineOnly.value)} )
+            Checkbox(checked = state.value.offlineOnly,
+                onCheckedChange = { libraryViewModel.toggleOfflineFilter()} )
         }
-        MangaGrid(mangas = mangas) { manga ->
+        MangaGrid(mangas = state.value.mangas) { manga ->
             navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
         }
     }
