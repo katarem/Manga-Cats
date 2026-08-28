@@ -30,7 +30,6 @@ fun ReaderScreen(
     mangaId: String,
     startingChapterIndex: Int,
     offline: Boolean,
-    mangaInfoViewModel: MangaInfoViewModel,
     viewModel: ReaderViewModel = koinViewModel<ReaderViewModel>()
 ) {
 
@@ -39,7 +38,7 @@ fun ReaderScreen(
     val currentChapterIndex = state.currentChapterIndex
 
     LaunchedEffect(Unit){
-        viewModel.loadManga(mangaInfoViewModel.state.value.chapters, mangaId,startingChapterIndex, offline).join()
+        viewModel.loadManga(mangaId,startingChapterIndex, offline).join()
     }
 
     LaunchedEffect(viewModel.state.value.currentChapter) {

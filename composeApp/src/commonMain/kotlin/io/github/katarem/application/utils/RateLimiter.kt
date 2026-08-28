@@ -21,7 +21,6 @@ class RateLimiter(
     }
 
     suspend fun acquire(){
-        println("me ejecuto xd")
         tokens.receive()
     }
 

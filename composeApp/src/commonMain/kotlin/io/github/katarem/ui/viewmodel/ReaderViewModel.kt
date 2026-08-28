@@ -12,6 +12,7 @@ import io.github.katarem.data.model.Chapter
 import io.github.katarem.application.service.MangaService
 import io.github.katarem.application.utils.sortByChapter
 import io.github.katarem.ui.state.ReaderState
+import io.github.katarem.ui.store.ChapterStore
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,7 @@ class ReaderViewModel(
     private val service: MangaService,
     private val dataService: DataStoreService,
     private val downloadService: DownloadService,
+    private val offlineChapterStore: ChapterStore,
     preferences: DataStore<Preferences>
 ) : ViewModel() {
 
@@ -51,25 +53,26 @@ class ReaderViewModel(
         return@async service.getChapters(mangaId).map(ChapterMappers.DtoToChapter::map).sortByChapter()
     }
 
-    fun loadMangaOnline(mangaId: String, chapters: List<Chapter>, chapterIndex: Int) = viewModelScope.launch{
+    fun loadMangaOnline(mangaId: String, chapterIndex: Int) = viewModelScope.launch{
+        val chapters = offlineChapterStore.getChapters()
         val chaptersToRead = chapters.ifEmpty { getChapters(mangaId).await() }
         val pages = getPages(chaptersToRead[chapterIndex].id, savingMode.first()).await()
         val currentChapter = chaptersToRead[chapterIndex]
         _state.update { it.copy(pages = pages, currentChapterIndex = chapterIndex, chapters = chaptersToRead, currentChapter = currentChapter) }
     }
 
-    fun loadMangaOffline(chapters: List<Chapter>, chapterIndex: Int) = viewModelScope.launch{
+    fun loadMangaOffline(chapterIndex: Int) = viewModelScope.launch{
+        val chapters = offlineChapterStore.getChapters()
         val chapter = chapters[chapterIndex]
         val pages = downloadService.getChapterPages(chapter)
-        println(pages)
         _state.update { it.copy(pages = pages, currentChapterIndex = chapterIndex, chapters = chapters, currentChapter = chapter) }
     }
 
-    fun loadManga(chapters: List<Chapter>, mangaId: String, chapterIndex: Int, offline: Boolean) = viewModelScope.launch {
+    fun loadManga(mangaId: String, chapterIndex: Int, offline: Boolean) = viewModelScope.launch {
         if(offline){
-            loadMangaOffline(chapters, chapterIndex)
+            loadMangaOffline(chapterIndex)
         } else {
-            loadMangaOnline(mangaId, chapters, chapterIndex)
+            loadMangaOnline(mangaId, chapterIndex)
         }
     }
 
