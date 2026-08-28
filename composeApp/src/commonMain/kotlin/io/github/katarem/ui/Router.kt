@@ -9,26 +9,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Book
-import compose.icons.feathericons.Clock
-import compose.icons.feathericons.Download
 import compose.icons.feathericons.Home
 import compose.icons.feathericons.Search
 import compose.icons.feathericons.Settings
-import io.github.katarem.data.model.MangaQuery
 import io.github.katarem.ui.component.BottomBar
 import io.github.katarem.ui.screen.CategoryScreen
-import io.github.katarem.ui.screen.DownloadScreen
 import io.github.katarem.ui.screen.MangaInfoScreen
 import io.github.katarem.ui.screen.HomeScreen
 import io.github.katarem.ui.screen.LibraryScreen
-import io.github.katarem.ui.screen.RecentScreen
 import io.github.katarem.ui.screen.ReaderScreen
 import io.github.katarem.ui.screen.SearchScreen
 import io.github.katarem.ui.screen.SettingsScreen
@@ -43,12 +37,6 @@ sealed class Routes {
 
     @Serializable
     object Search
-
-    @Serializable
-    object Download
-
-    @Serializable
-    object Recent
 
     @Serializable
     object Settings
@@ -86,16 +74,6 @@ fun Router(
             navigator.popBackStack<Routes.Home>(inclusive = false)
             selectedTabIndex = 0
         },
-//        Pair(FeatherIcons.Clock) {
-//            navigator.popBackStack<Routes.Home>(inclusive = false)
-//            navigator.navigate(Routes.Recent)
-//            selectedTabIndex = 1
-//        },
-//        Pair(FeatherIcons.Download){
-//            navigator.popBackStack<Routes.Home>(inclusive = false)
-//            navigator.navigate(Routes.Download)
-//            selectedTabIndex = 2
-//        },
         Pair(FeatherIcons.Book) {
             navigator.popBackStack<Routes.Home>(inclusive = false)
             navigator.navigate(Routes.Library)
@@ -138,6 +116,9 @@ fun Router(
                 val args = it.toRoute<Routes.Category>()
                 CategoryScreen(navigator, args.name,args.tagId,categoryViewModel)
             }
+            composable<Routes.Library> {
+                LibraryScreen(navigator)
+            }
             composable<Routes.MangaInfo> {
                 val args = it.toRoute<Routes.MangaInfo>()
                 MangaInfoScreen(navigator, args.mangaJson, mangaInfoViewModel)
@@ -145,18 +126,10 @@ fun Router(
             composable<Routes.Search> {
                 SearchScreen(navigator)
             }
-            composable<Routes.Recent> {
-                RecentScreen(navigator)
-            }
-            composable<Routes.Download>{
-                DownloadScreen(navigator, mangaInfoViewModel)
-            }
             composable<Routes.Settings> {
                 SettingsScreen()
             }
-            composable<Routes.Library> {
-                LibraryScreen(navigator)
-            }
+
         }
     }
 

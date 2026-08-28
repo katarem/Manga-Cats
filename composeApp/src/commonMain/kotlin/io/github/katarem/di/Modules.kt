@@ -1,7 +1,6 @@
 package io.github.katarem.di
 
 import coil3.ImageLoader
-import coil3.compose.LocalPlatformContext
 import io.github.katarem.application.repository.ChapterRepository
 import io.github.katarem.application.repository.ChapterRepositoryImpl
 import io.github.katarem.application.repository.MangaRepository
@@ -14,11 +13,9 @@ import io.github.katarem.application.service.MangaService
 import io.github.katarem.application.service.MangaServiceImpl
 import io.github.katarem.application.utils.RateLimiter
 import io.github.katarem.ui.viewmodel.CategoryViewModel
-import io.github.katarem.ui.viewmodel.DownloadViewModel
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
 import io.github.katarem.ui.viewmodel.HomeViewModel
 import io.github.katarem.ui.viewmodel.LibraryViewModel
-import io.github.katarem.ui.viewmodel.RecentViewModel
 import io.github.katarem.ui.viewmodel.ReaderViewModel
 import io.github.katarem.ui.viewmodel.SearchViewModel
 import io.github.katarem.ui.viewmodel.SettingsViewModel
@@ -38,8 +35,6 @@ val sharedModule = module {
     viewModelOf(::ReaderViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::SearchViewModel)
-    viewModelOf(::RecentViewModel)
-    viewModelOf(::DownloadViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::CategoryViewModel)
     viewModelOf(::LibraryViewModel)
