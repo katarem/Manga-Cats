@@ -61,7 +61,6 @@ class ReaderViewModel(
     fun loadMangaOffline(chapters: List<Chapter>, chapterIndex: Int) = viewModelScope.launch{
         val chapter = chapters[chapterIndex]
         val pages = downloadService.getChapterPages(chapter)
-        println(pages)
         _state.update { it.copy(pages = pages, currentChapterIndex = chapterIndex, chapters = chapters, currentChapter = chapter) }
     }
 

@@ -46,6 +46,7 @@ fun LibraryScreen(
                 onCheckedChange = { libraryViewModel.toggleOfflineFilter()} )
         }
         MangaGrid(mangas = state.value.mangas) { manga ->
+            mangaInfoViewModel.setManga(manga)
             navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
         }
     }

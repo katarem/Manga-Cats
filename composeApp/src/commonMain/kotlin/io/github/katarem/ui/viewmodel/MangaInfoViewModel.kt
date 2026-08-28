@@ -1,6 +1,5 @@
 package io.github.katarem.ui.viewmodel
 
-import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -16,16 +15,14 @@ import io.github.katarem.application.utils.sortByChapter
 import io.github.katarem.data.constant.Language
 import io.github.katarem.data.model.Manga
 import io.github.katarem.ui.state.MangaInfoState
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,18 +41,19 @@ class MangaInfoViewModel(
     }
 
     fun setManga(manga: Manga) = viewModelScope.launch {
+        getChapters(manga)
         _state.update { it.copy(manga = manga) }
-        getChapters(manga.id)
     }
 
-    private fun getChapters(id: String) = viewModelScope.launch {
+    private fun getChapters(manga: Manga) = viewModelScope.launch {
         _state.update { it.copy(errorText = "") }
-        val chapterDto = remoteService.getChapters(id, preferredLanguage.first())
+        val chapters = if(manga.offline) dataStoreService.getChapterByManga(manga.id)
+            .map(ChapterMappers.EntityToChapter::map)
+            else remoteService.getChapters(manga.id, preferredLanguage.first())
+            .map(ChapterMappers.DtoToChapter::map)
         _state.update {
             it.copy(
-                chapters = chapterDto.filter { it.attributes.chapter != null }
-                    .map(ChapterMappers.DtoToChapter::map)
-                    .sortByChapter()
+                chapters = chapters.sortByChapter()
             )
         }
         if (_state.value.chapters.isEmpty()) {
@@ -63,11 +61,6 @@ class MangaInfoViewModel(
         }
 
     }
-
-    fun setOfflineChapters(chapters: List<Chapter>) = viewModelScope.launch {
-        _state.update { it.copy(chapters = chapters) }
-    }
-
     fun downloadManga() = viewModelScope.launch {
         _state.update { it.copy(downloading = true) }
         async { downloadService.downloadManga(_state.value.manga!!,_state.value.chapters) }.join()

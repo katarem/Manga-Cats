@@ -117,7 +117,7 @@ fun Router(
                 CategoryScreen(navigator, args.name,args.tagId,categoryViewModel)
             }
             composable<Routes.Library> {
-                LibraryScreen(navigator)
+                LibraryScreen(navigator, mangaInfoViewModel)
             }
             composable<Routes.MangaInfo> {
                 val args = it.toRoute<Routes.MangaInfo>()
