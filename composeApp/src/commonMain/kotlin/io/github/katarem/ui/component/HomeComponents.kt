@@ -81,6 +81,17 @@ fun MangaCover(
                         .padding(5.dp)
                 )
             }
+            if(manga.offline) {
+                Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Offline",
+                        style = MaterialTheme.typography.displaySmall.copy(textAlign = TextAlign.Center),
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(5.dp)
+                    )
+                }
+            }
         }
     }
 }

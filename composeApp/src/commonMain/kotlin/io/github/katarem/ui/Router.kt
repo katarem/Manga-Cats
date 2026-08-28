@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.Book
 import compose.icons.feathericons.Clock
 import compose.icons.feathericons.Download
 import compose.icons.feathericons.Home
@@ -26,6 +27,7 @@ import io.github.katarem.ui.screen.CategoryScreen
 import io.github.katarem.ui.screen.DownloadScreen
 import io.github.katarem.ui.screen.MangaInfoScreen
 import io.github.katarem.ui.screen.HomeScreen
+import io.github.katarem.ui.screen.LibraryScreen
 import io.github.katarem.ui.screen.RecentScreen
 import io.github.katarem.ui.screen.ReaderScreen
 import io.github.katarem.ui.screen.SearchScreen
@@ -50,6 +52,9 @@ sealed class Routes {
 
     @Serializable
     object Settings
+
+    @Serializable
+    object Library
 
     @Serializable
     data class Category(val name: String, val tagId: String)
@@ -81,26 +86,32 @@ fun Router(
             navigator.popBackStack<Routes.Home>(inclusive = false)
             selectedTabIndex = 0
         },
-        Pair(FeatherIcons.Clock) {
+//        Pair(FeatherIcons.Clock) {
+//            navigator.popBackStack<Routes.Home>(inclusive = false)
+//            navigator.navigate(Routes.Recent)
+//            selectedTabIndex = 1
+//        },
+//        Pair(FeatherIcons.Download){
+//            navigator.popBackStack<Routes.Home>(inclusive = false)
+//            navigator.navigate(Routes.Download)
+//            selectedTabIndex = 2
+//        },
+        Pair(FeatherIcons.Book) {
             navigator.popBackStack<Routes.Home>(inclusive = false)
-            navigator.navigate(Routes.Recent)
+            navigator.navigate(Routes.Library)
             selectedTabIndex = 1
-        },
-        Pair(FeatherIcons.Download){
-            navigator.popBackStack<Routes.Home>(inclusive = false)
-            navigator.navigate(Routes.Download)
-            selectedTabIndex = 2
         },
         Pair(FeatherIcons.Search) {
             navigator.popBackStack<Routes.Home>(inclusive = false)
             navigator.navigate(Routes.Search)
-            selectedTabIndex = 3
+            selectedTabIndex = 2
         },
         Pair(FeatherIcons.Settings) {
             navigator.popBackStack<Routes.Home>(inclusive = false)
             navigator.navigate(Routes.Settings)
-            selectedTabIndex = 4
-        }
+            selectedTabIndex = 3
+        },
+
     )
     Scaffold(
         bottomBar = { BottomBar(menuActions, selectedTabIndex,Modifier.fillMaxWidth()) }
@@ -142,6 +153,9 @@ fun Router(
             }
             composable<Routes.Settings> {
                 SettingsScreen()
+            }
+            composable<Routes.Library> {
+                LibraryScreen(navigator)
             }
         }
     }

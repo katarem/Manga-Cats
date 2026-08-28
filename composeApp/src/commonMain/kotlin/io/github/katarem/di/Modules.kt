@@ -17,6 +17,7 @@ import io.github.katarem.ui.viewmodel.CategoryViewModel
 import io.github.katarem.ui.viewmodel.DownloadViewModel
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
 import io.github.katarem.ui.viewmodel.HomeViewModel
+import io.github.katarem.ui.viewmodel.LibraryViewModel
 import io.github.katarem.ui.viewmodel.RecentViewModel
 import io.github.katarem.ui.viewmodel.ReaderViewModel
 import io.github.katarem.ui.viewmodel.SearchViewModel
@@ -41,6 +42,7 @@ val sharedModule = module {
     viewModelOf(::DownloadViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::CategoryViewModel)
+    viewModelOf(::LibraryViewModel)
 }
 
 val dataModule = module {
