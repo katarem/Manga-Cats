@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ import io.github.katarem.ui.Routes
 import io.ktor.util.decodeBase64Bytes
 import kotlin.collections.emptyList
 import kotlin.io.encoding.Base64
+import kotlin.math.round
 
 @Composable
 fun MangaCover(
@@ -176,11 +178,17 @@ fun DownloadingMangaCover(manga: Manga, progress: Float) = Box(Modifier.size(150
             alpha = 0.3f
         )
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize().padding(5.dp)) {
-            CircularProgressIndicator(
-                progress = { progress / 100f },
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+
+                CircularProgressIndicator(
+                    progress = { progress / 100f },
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                )
+                Text(
+                    text = "${progress.toInt() }%"
+                )
+            }
         }
     }
 

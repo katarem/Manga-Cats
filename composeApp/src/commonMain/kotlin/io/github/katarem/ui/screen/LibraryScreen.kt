@@ -48,10 +48,15 @@ fun LibraryScreen(
             Checkbox(checked = state.value.offlineOnly,
                 onCheckedChange = { libraryViewModel.toggleOfflineFilter()} )
         }
-        MangaGrid(mangas = state.value.mangas) { manga ->
-            scope.launch {
-                libraryViewModel.setChapters(manga).join()
-                navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
+        MangaGrid(
+            downloads = state.value.downloads,
+            mangas = state.value.mangas
+        ) { manga, chapters ->
+            if(!libraryViewModel.isDownloading(manga)) {
+                scope.launch {
+                    libraryViewModel.setChapters(chapters)
+                    navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
+                }
             }
         }
     }
