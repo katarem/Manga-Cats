@@ -75,7 +75,7 @@ class MangaInfoViewModel(
     }
 
     fun saveManga(chapterIndex: Int) = viewModelScope.launch(Dispatchers.IO) {
-        dataStoreService.upsertManga(MangaMappers.MangaToEntity.map(_state.value.manga!!).copy(currentChapterIndex = chapterIndex))
+        dataStoreService.upsertManga(MangaMappers.MangaToEntity.map(_state.value.manga!!).copy(currentChapterIndex = chapterIndex, read = true))
         dataStoreService.upsertChapter(ChapterMappers.ChapterToEntity.map(_state.value.chapters[chapterIndex]))
     }
 
