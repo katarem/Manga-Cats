@@ -19,13 +19,13 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Build Android debug APK
-        run: ./gradlew :mobile:assembleDebug
+        run: ./gradlew :MangaCatsKMP:assembleDebug
 
       - name: Upload Android debug APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: mobile/build/outputs/apk/debug/*.apk
+          path: MangaCatsKMP/build/outputs/apk/debug/*.apk
 
   build-desktop-macos:
     name: Build Desktop macOS
