@@ -13,7 +13,6 @@ jobs:
   build-android:
     name: Build Android
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +32,6 @@ jobs:
   build-desktop-macos:
     name: Build Desktop macOS
     runs-on: macos-latest
-    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +51,6 @@ jobs:
   build-desktop-windows:
     name: Build Desktop Windows
     runs-on: windows-latest
-    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,7 +70,6 @@ jobs:
   build-desktop-linux:
     name: Build Desktop Linux
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
