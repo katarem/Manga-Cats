@@ -12,6 +12,8 @@ import io.github.katarem.application.service.DataStoreServiceImpl
 import io.github.katarem.application.service.MangaService
 import io.github.katarem.application.service.MangaServiceImpl
 import io.github.katarem.application.utils.RateLimiter
+import io.github.katarem.ui.store.ChapterStore
+import io.github.katarem.ui.store.ChapterStoreImpl
 import io.github.katarem.ui.viewmodel.CategoryViewModel
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
 import io.github.katarem.ui.viewmodel.HomeViewModel
@@ -64,6 +66,10 @@ val dataModule = module {
     single {
         ImageLoader(get())
     }
+
+    single {
+        ChapterStoreImpl()
+    }.bind<ChapterStore>()
 
     single<CoroutineScope> {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)

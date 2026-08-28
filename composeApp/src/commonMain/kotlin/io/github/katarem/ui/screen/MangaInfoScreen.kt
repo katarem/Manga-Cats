@@ -25,12 +25,13 @@ import io.github.katarem.ui.component.Title
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MangaInfoScreen(
     navigator: NavHostController,
     mangaJson: String,
-    viewModel: MangaInfoViewModel
+    viewModel: MangaInfoViewModel = koinViewModel<MangaInfoViewModel>()
 ) {
 
     val state by viewModel.state.collectAsState()

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,14 +20,16 @@ import io.github.katarem.ui.Routes
 import io.github.katarem.ui.component.MangaGrid
 import io.github.katarem.ui.viewmodel.LibraryViewModel
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LibraryScreen(
     navigator: NavHostController,
-    mangaInfoViewModel: MangaInfoViewModel,
     libraryViewModel: LibraryViewModel = koinViewModel<LibraryViewModel>()
 ) {
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         libraryViewModel.loadMangas()
@@ -46,8 +49,10 @@ fun LibraryScreen(
                 onCheckedChange = { libraryViewModel.toggleOfflineFilter()} )
         }
         MangaGrid(mangas = state.value.mangas) { manga ->
-            mangaInfoViewModel.setManga(manga)
-            navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
+            scope.launch {
+                libraryViewModel.setChapters(manga).join()
+                navigator.navigate(Routes.Reader(manga.currentChapterIndex, manga.id, manga.offline))
+            }
         }
     }
 

@@ -27,7 +27,6 @@ import io.github.katarem.ui.screen.ReaderScreen
 import io.github.katarem.ui.screen.SearchScreen
 import io.github.katarem.ui.screen.SettingsScreen
 import io.github.katarem.ui.viewmodel.CategoryViewModel
-import io.github.katarem.ui.viewmodel.MangaInfoViewModel
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -63,7 +62,6 @@ sealed class Routes {
 
 @Composable
 fun Router(
-    mangaInfoViewModel: MangaInfoViewModel = koinViewModel<MangaInfoViewModel>(),
     categoryViewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
 ) {
 
@@ -108,8 +106,7 @@ fun Router(
                 ReaderScreen(
                     mangaId = args.mangaId,
                     startingChapterIndex = args.chapterIndex,
-                    offline = args.offline,
-                    mangaInfoViewModel = mangaInfoViewModel
+                    offline = args.offline
                 )
             }
             composable<Routes.Category> {
@@ -117,11 +114,11 @@ fun Router(
                 CategoryScreen(navigator, args.name,args.tagId,categoryViewModel)
             }
             composable<Routes.Library> {
-                LibraryScreen(navigator, mangaInfoViewModel)
+                LibraryScreen(navigator)
             }
             composable<Routes.MangaInfo> {
                 val args = it.toRoute<Routes.MangaInfo>()
-                MangaInfoScreen(navigator, args.mangaJson, mangaInfoViewModel)
+                MangaInfoScreen(navigator, args.mangaJson)
             }
             composable<Routes.Search> {
                 SearchScreen(navigator)
