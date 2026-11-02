@@ -23,7 +23,6 @@ import io.github.katarem.ui.component.MangaActionsRow
 import io.github.katarem.ui.component.Tags
 import io.github.katarem.ui.component.Title
 import io.github.katarem.ui.viewmodel.MangaInfoViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -77,7 +76,9 @@ fun MangaInfoScreen(
             }
             MangaActionsRow(
                 isDownloading = isDownloading,
-                onDownloadClick = viewModel::downloadManga
+                isSaved = it.read,
+                onDownloadClick = viewModel::downloadManga,
+                onSaveClick = { viewModel.saveManga(0) }
             )
             ChaptersColumn(error, chapters, onChapterClick)
         }

@@ -63,7 +63,7 @@ class MangaInfoViewModel(
     }
     fun downloadManga() = viewModelScope.launch {
         _state.update { it.copy(downloading = true) }
-        async { downloadService.downloadManga(_state.value.manga!!,_state.value.chapters) }.join()
+        launch { downloadService.downloadManga(_state.value.manga!!,_state.value.chapters) }.join()
         _state.update { it.copy(downloading = false) }
     }
 

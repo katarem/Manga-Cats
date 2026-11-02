@@ -112,13 +112,18 @@ fun LazyListScope.ChaptersColumn(
 
 fun LazyListScope.MangaActionsRow(
     isDownloading: Boolean,
-    onDownloadClick: () -> Unit
+    isSaved: Boolean,
+    onDownloadClick: () -> Unit,
+    onSaveClick: () -> Unit
 ) = item {
     Row(
         modifier = Modifier.fillMaxWidth().padding(10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        TextButton({ }) {
+        TextButton(
+            onClick = onSaveClick,
+            enabled = !isSaved
+        ) {
             Text("Add to List")
         }
         if (!isDownloading) {
@@ -171,7 +176,10 @@ fun LazyListScope.Tags(
     onTagClick: (Tag) -> Unit,
 ) {
     item {
-        LazyRow(contentPadding = PaddingValues(10.dp), horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally)) {
+        LazyRow(
+            contentPadding = PaddingValues(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally)
+        ) {
             items(tags) { item ->
                 Text(
                     text = item.name,

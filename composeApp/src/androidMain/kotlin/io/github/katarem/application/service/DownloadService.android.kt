@@ -1,32 +1,21 @@
 package io.github.katarem.application.service
 
 import android.content.Context
-import androidx.compose.runtime.mutableStateOf
 import io.github.katarem.application.mapper.ChapterMappers
 import io.github.katarem.application.mapper.MangaMappers
 import io.github.katarem.data.model.Chapter
 import io.github.katarem.data.model.Manga
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
-import io.ktor.client.statement.readBytes
 import io.ktor.client.statement.readRawBytes
-import io.ktor.util.decodeBase64Bytes
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okio.Path.Companion.toPath
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.util.Base64
 
 actual class DownloadService(
     private val mangaService: MangaService,
